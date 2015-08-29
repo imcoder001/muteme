@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <RadioGroup
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:id="@+id/switch_mapView">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Map View"
+                android:id="@+id/mapViewBtn"
+                android:checked="true"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Satellite View"
+                android:id="@+id/satelliteViewBtn" />
+        </RadioGroup>
+
+
+    </LinearLayout>
+    <fragment
+         android:layout_width="match_parent"
+        android:layout_height="match_parent" android:id="@+id/map" tools:context=".MainActivity"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        />
+</LinearLayout>
