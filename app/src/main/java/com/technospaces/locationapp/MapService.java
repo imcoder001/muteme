@@ -15,6 +15,10 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.lang.reflect.Array;
+import java.sql.Time;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -28,9 +32,11 @@ public class MapService extends Service implements GoogleApiClient.ConnectionCal
     private AudioManager mAudioManager;
     List<String> all_locations_list;
     private DBClass newDB;
-    private List<HashMap<String, String>> selectAllUserPlaces;
+    private List<Place> selectAllUserPlaces;
     int previousMode = -1;
 
+
+//    int _id2 = (int) System.currentTimeMillis();
     SilentModeOnBroadCastReceiver silentModeOnBroadCastReceiver = new SilentModeOnBroadCastReceiver();
     SilentModeOffBroadCastReceiver silentModeOffBroadCastReceiver = new SilentModeOffBroadCastReceiver();
 
@@ -57,15 +63,13 @@ public class MapService extends Service implements GoogleApiClient.ConnectionCal
         final Handler h = new Handler();
         final int delay = 1000; //milliseconds
 
-        h.postDelayed(new Runnable(){
-            public void run(){
+        h.postDelayed(new Runnable() {
+            public void run() {
                 //do something
                 Calendar c = Calendar.getInstance();
                 int currentHour = c.get(Calendar.HOUR_OF_DAY);
                 int minHour = 1;
-                int  maxHour = 5;
-
-
+                int maxHour = 5;
 
 
 //                if(currentHour > minHour && currentHour  < maxHour){
@@ -83,16 +87,56 @@ public class MapService extends Service implements GoogleApiClient.ConnectionCal
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
-        silentModeOnBroadCastReceiver.SetAlarm(this);
-        silentModeOffBroadCastReceiver.SetAlarm(this);
+
+        ArrayList<TimeRange> arraylist_start = (ArrayList<TimeRange>) intent.getSerializableExtra("arraylist_start");
+
+        if(arraylist_start != null){
+            try {
+
+                silentModeOnBroadCastReceiver.startAlarmAt(this, arraylist_start);
+                silentModeOffBroadCastReceiver.startAlarmOff(this, arraylist_start);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         mGoogleApiClient.connect();
-        silentModeOnBroadCastReceiver.SetAlarm(this);
-        silentModeOffBroadCastReceiver.SetAlarm(this);
+//        silentModeOnBroadCastReceiver.setAlarm(this);
+//        silentModeOffBroadCastReceiver.setAlarm(this);
+        try{
+
+            ArrayList<TimeRange> arraylist_start = (ArrayList<TimeRange>) intent.getSerializableExtra("arraylist_start");
+
+            if(arraylist_start != null){
+                try {
+                    silentModeOnBroadCastReceiver.startAlarmAt(this, arraylist_start);
+                    silentModeOffBroadCastReceiver.startAlarmOff(this, arraylist_start);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        catch (NullPointerException ne){
+
+        }
+        catch (Exception e){
+
+        }
+//        Bundle bundle = intent.getExtras();
+//        if(bundle != null){
+//            ArrayList<Integer> list = bundle.getIntegerArrayList("0");
+//    //        ArrayList<Integer> list = new ArrayList<Integer>();
+//    //        list.add(36);
+//    //        list.add(37);
+//    //        list.add(38);
+//
+//
+//        }
+
         return START_STICKY;
     }
 
@@ -132,10 +176,10 @@ public class MapService extends Service implements GoogleApiClient.ConnectionCal
         selectAllUserPlaces = newDB.selectAllUserPlaces();
         if(selectAllUserPlaces != null){
             for(int i = 0; i < selectAllUserPlaces.size(); i++){
-                HashMap<String, String> map = selectAllUserPlaces.get(i);
+                Place place = selectAllUserPlaces.get(i);
                 String result = "";
-                String latitudeStr = map.get("latitude").toString();
-                String longitudeStr = map.get("longitude").toString();
+                String latitudeStr = Double.toString(place.getLatitude());
+                String longitudeStr = Double.toString(place.getLongitude());;
 
 
                 double currentLat = location.getLatitude();
@@ -143,6 +187,8 @@ public class MapService extends Service implements GoogleApiClient.ConnectionCal
 
                 float distance = distanceBetween(Double.parseDouble(latitudeStr), Double.parseDouble(longitudeStr), currentLat, currentLng);
                 if(distance < 30){
+//                    PlaySound ps = new PlaySound();
+//                    ps.playSoundThread();
                     distanceLessThan30 = true;
                     break;
                 }
@@ -174,6 +220,7 @@ public class MapService extends Service implements GoogleApiClient.ConnectionCal
 
 
     }
+
     public void activateAudioMode(int mode){
         if(!checkIfPhoneIsSilent()){
             mAudioManager.setRingerMode(mode);

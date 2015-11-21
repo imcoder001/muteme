@@ -1,16 +1,23 @@
 package com.technospaces.locationapp;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.LauncherActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,11 +32,13 @@ import java.util.List;
 
 public class MyPlacesActivity extends ActionBarActivity {
     ListView allPlacesList;
-    RelativeLayout my_places_container;
+    LinearLayout my_places_container;
     private DBClass newDB;
-    private List<HashMap<String, String>> selectAllUserPlaces;
-    ArrayAdapter<String> myArrayAdapter;
-    List<String> all_locations_list;
+    private List<Place> selectAllUserPlaces;
+    ArrayAdapter<Place> myArrayAdapter;
+    private TextView no_location_message;
+//    List<Place> all_places_list;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,50 +48,57 @@ public class MyPlacesActivity extends ActionBarActivity {
         newDB.getWritableDatabase();
 
         selectAllUserPlaces = newDB.selectAllUserPlaces();
+        no_location_message = (TextView)findViewById(R.id.no_location_message);
 
 
 
-        my_places_container = (RelativeLayout) findViewById(R.id.my_places_container);
+        my_places_container = (LinearLayout) findViewById(R.id.my_places_container);
         allPlacesList = new ListView(this);
+        int[] colors = {0xFF96AFAF, 0xFF96AFAF, 0xFF96AFAF}; // red for the example
+        allPlacesList.setDivider(new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, colors));
+        allPlacesList.setDividerHeight(1);
+        allPlacesList.addOnLayoutChangeListener(
+                new View.OnLayoutChangeListener() {
+                    @Override
+                    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                        if(allPlacesList.getChildCount()==0){
+                            no_location_message.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+        );
 
 
 
-        all_locations_list = new ArrayList<String>();
+//        all_locations_list = new ArrayList<String>();
+//        all_places_list = new ArrayList<Place>();
 
         if(selectAllUserPlaces != null){
-            for(int i = 0; i < selectAllUserPlaces.size(); i++){
-                HashMap<String, String> map = selectAllUserPlaces.get(i);
-                String result = "";
-                result = map.get("name").toString();
-//                for (HashMap.Entry<String, String> entry : map.entrySet())
-//                {
-//                    result += entry.getKey() + "/" + entry.getValue()+ "\n";
-//                }
-
-                all_locations_list.add(result);
-
-
-            }
+            myArrayAdapter = new ArrayAdapter<Place>(this, R.layout.places_list, R.id.itemName,
+                    selectAllUserPlaces);
+            allPlacesList.setAdapter(myArrayAdapter);
+            my_places_container.addView(allPlacesList);
         }
         else{
-            TextView textView = new TextView(this);
-            textView.setText("No Location Added... To start adding Locations Long Press on the Map Screen");
-            my_places_container.addView(textView);
+            appendTextView();
         }
 
 
 
 
 
-        myArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-                all_locations_list);
-        allPlacesList.setAdapter(myArrayAdapter);
-        my_places_container.addView(allPlacesList);
         setMyPlacesClickListener();
         setMyPlacesLongClickListener();
 
 
 
+    }
+    public void appendTextView(){
+        TextView textView = new TextView(this);
+        textView.setText("No Location Added... To start adding Locations Long Press on the Map Screen");
+//            my_places_container.addView(textView);
+        textView.setTextColor(Color.WHITE);
+        my_places_container.addView(textView, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, Gravity.CENTER_VERTICAL));
     }
     public void setMyPlacesClickListener(){
         allPlacesList.setOnItemClickListener(
@@ -90,14 +106,14 @@ public class MyPlacesActivity extends ActionBarActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         parent.getSelectedItemId();
-                        HashMap map = selectAllUserPlaces.get(position);
+                        Place place = selectAllUserPlaces.get(position);
 
 
 
                         Intent i = new Intent(MyPlacesActivity.this, MainActivity.class);
                         Bundle mBundle = new Bundle();
-                        mBundle.putString("latitude", map.get("latitude").toString());
-                        mBundle.putString("longitude", map.get("longitude").toString());
+                        mBundle.putString("latitude", Double.toString(place.getLatitude()));
+                        mBundle.putString("longitude", Double.toString(place.getLongitude()));
                         i.putExtras(mBundle);
                         startActivity(i);
                     }
@@ -112,8 +128,8 @@ public class MyPlacesActivity extends ActionBarActivity {
                         CharSequence actions[] = new CharSequence[] {"Delete"};
                         final int pos = position;
 
-                        HashMap map = selectAllUserPlaces.get(position);
-                        String _id = map.get("_id").toString();
+                        Place place = selectAllUserPlaces.get(position);
+                        String _id = Integer.toString(place.get_id());
                         final long _id1 = Long.parseLong(_id);
 
 
@@ -125,16 +141,14 @@ public class MyPlacesActivity extends ActionBarActivity {
                                 // the user clicked on colors[which]
                                 if(true/*newDB.deleteUserPlace(_id)*/){
                                     try{
-                                        all_locations_list.remove(pos);
+                                        selectAllUserPlaces.remove(pos);
                                         myArrayAdapter.notifyDataSetChanged();
                                         newDB.deleteUserPlace(_id1);
-                                        Toast.makeText(getApplicationContext(),"Deleted", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(),"Location Deleted", Toast.LENGTH_LONG).show();
                                     }
                                     catch (Exception e){
                                         e.printStackTrace();
                                     }
-
-
                                 }
                                 else{
                                     Toast.makeText(getApplicationContext(),"Not Deleted", Toast.LENGTH_LONG).show();
@@ -148,31 +162,4 @@ public class MyPlacesActivity extends ActionBarActivity {
         );
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        switch (id){
-            case R.id.my_saved_places:
-                Intent i = new Intent(this, MyPlacesActivity.class);
-                startActivity(i);
-                break;
-            /*case R.id.my_current_location:
-                zoomToCurrentLocation();
-                break;
-                */
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

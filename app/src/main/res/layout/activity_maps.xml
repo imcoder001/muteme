@@ -4,10 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:background="#347172"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="15dp">
+
         <RadioGroup
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -17,21 +23,26 @@
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Map View"
+                android:text="Map"
                 android:id="@+id/mapViewBtn"
-                android:checked="true"/>
+                android:checked="true"
+                android:textColor="#fff" />
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Satellite View"
-                android:id="@+id/satelliteViewBtn" />
+                android:text="Satellite"
+                android:id="@+id/satelliteViewBtn"
+                android:textColor="#fff"
+                android:checked="false" />
         </RadioGroup>
+
+        <fragment
+             android:layout_width="match_parent"
+            android:layout_height="match_parent" android:id="@+id/map" tools:context=".MainActivity"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            />
 
 
     </LinearLayout>
-    <fragment
-         android:layout_width="match_parent"
-        android:layout_height="match_parent" android:id="@+id/map" tools:context=".MainActivity"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        />
+
 </LinearLayout>

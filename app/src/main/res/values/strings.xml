@@ -11,6 +11,7 @@
     <string name="title_activity_my_places">My Places</string>
     <string name="my_current_location">Current Location</string>
     <string name="time_range_link">Time Range</string>
-    <string name="title_activity_time">TimeActivity</string>
-    <string name="title_add_time_activity">Add New Time Range</string>
+    <string name="title_activity_time">All Times List</string>
+    <string name="title_add_time_activity">Add New Time</string>
+    <string name="title_activity_play_sound">PlaySound</string>
 </resources>

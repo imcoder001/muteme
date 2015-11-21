@@ -48,11 +48,20 @@
         </activity>
         <activity
             android:name=".TimeActivity"
-            android:label="@string/title_activity_time" >
+            android:label="@string/title_activity_time"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.technospaces.locationapp.MainActivity" />
         </activity>
         <activity
             android:name=".AddTimeActivity"
-            android:label="@string/title_add_time_activity" >
+            android:label="@string/title_add_time_activity"
+            android:parentActivityName=".TimeActivity"
+            android:windowSoftInputMode="adjustResize">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.technospaces.locationapp.TimeActivity" />
         </activity>
 
         <receiver

@@ -2,111 +2,40 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
+    android:background="#347172"
+    android:padding="15dp">
 
 
 
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/timeListLayout"
+        android:orientation="vertical"
         >
         <!--Scrollable content here-->
-        <LinearLayout
-            android:layout_width="fill_parent"
+
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="test text"
-                android:textSize="40dp"/>
-        </LinearLayout>
-    </ScrollView>
+            android:text="No Time Added... To start adding Time, Click on Plus Button at bottom of the screen"
+            android:id="@+id/no_mute_time_tv"
+            android:textColor="#fff"
+            android:visibility="gone"/>
+    </LinearLayout>
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/plus_btn"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|right"
-        android:paddingRight="30dip"
-        android:paddingBottom="30dip"
         android:background="@android:color/transparent"
-        android:id="@+id/plusBtn" />
+        android:id="@+id/plusBtn"
+        android:maxHeight="60dp"
+        android:maxWidth="60dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter" />
 
 </FrameLayout>

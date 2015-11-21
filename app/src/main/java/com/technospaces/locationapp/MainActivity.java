@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
@@ -88,7 +89,7 @@ public class MainActivity extends ActionBarActivity implements
 
     private LocationRequest mLocationRequest;
     private DBClass newDB;
-    private List<HashMap<String, String>> selectAllUserPlaces;
+    private List<Place> selectAllUserPlaces;
     Button myLocationBtn;
     Dialog myDialog;
     Marker m;
@@ -171,22 +172,17 @@ public class MainActivity extends ActionBarActivity implements
         if(selectAllUserPlaces != null){
             mMap.clear();
             for(int i = 0; i < selectAllUserPlaces.size(); i++){
-                HashMap<String, String> map = selectAllUserPlaces.get(i);
-                String latitude = map.get("latitude");
-                String longitude = map.get("longitude");
-                String name = map.get("name").toString();
+                Place place = selectAllUserPlaces.get(i);
+                String latitude = Double.toString(place.getLatitude());
+                String longitude = Double.toString(place.getLongitude());
+                String name = place.getName();
 
                 mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude))).title(name)).getId();
-
-
-
             }
         }
-        else
-        {
-
+        else{
+            mMap.clear();
         }
-
     }
 
     private void startMapService() {
@@ -241,7 +237,9 @@ public class MainActivity extends ActionBarActivity implements
     private void callSaveLocationForm(LatLng point)
     {
         final LatLng p = point;
-        myDialog = new Dialog(this);
+        myDialog = new Dialog(this, R.style.CustomDialog);
+        myDialog.setTitle("Save Your Location");
+//        myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         myDialog.setContentView(R.layout.save_loaction_form);
         myDialog.setCancelable(true);
         Button saveBtn = (Button) myDialog.findViewById(R.id.saveBtn);

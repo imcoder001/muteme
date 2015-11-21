@@ -16,5 +16,8 @@
         <!-- Support library compatibility -->
         <item name="background">@drawable/actionbar_bg</item>
     </style>
-
+    <style name="CustomDialog" parent="@android:style/Theme.Holo.Dialog">
+        <item name="android:windowBackground">@color/titlebackgroundcolor</item>
+        <item name="android:textColor">@color/titlecolor</item>
+    </style>
 </resources>

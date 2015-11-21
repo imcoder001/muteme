@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:padding="@dimen/abc_action_bar_content_inset_material"
     android:id="@+id/linearLayoutForm"
-    >
+    android:background="#d1d1d1">
 
     <TextView
         android:layout_width="fill_parent"
@@ -17,12 +17,15 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/nameField" />
+        android:id="@+id/nameField"
+        android:textColor="#000" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save"
         android:id="@+id/saveBtn"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/mybutton"
+        android:textColor="#fff" />
 </LinearLayout>
